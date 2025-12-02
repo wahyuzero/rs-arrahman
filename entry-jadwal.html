@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entry Jadwal - RS Ar-Rahman</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: #2c3e50;
+            min-height: 100vh;
+            color: white;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-header {
+            padding: 25px 20px;
+            background: linear-gradient(135deg, #00a8cc 0%, #0097b8 100%);
+            text-align: center;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .menu-section {
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(0,168,204,0.1);
+            color: white;
+        }
+
+        .menu-item.active {
+            background-color: rgba(0,168,204,0.2);
+            color: white;
+            border-left: 4px solid #00a8cc;
+        }
+
+        .menu-item i {
+            width: 20px;
+            font-size: 16px;
+        }
+
+        .menu-item span {
+            font-size: 14px;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background-color: rgba(255,255,255,0.1);
+            margin: 10px 20px;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+        }
+
+        .top-header {
+            background: white;
+            padding: 20px 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h1 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #00a8cc 0%, #0097b8 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .content-area {
+            padding: 30px;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .form-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .form-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #00a8cc 0%, #0097b8 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .form-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: white;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #00a8cc;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .checkbox-item:hover {
+            background: #e9ecef;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #00a8cc;
+        }
+
+        .checkbox-item label {
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .time-inputs {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .time-inputs input {
+            flex: 1;
+        }
+
+        .time-icon {
+            color: #00a8cc;
+            font-size: 18px;
+        }
+
+        .btn-save {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.2s;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40,167,69,0.3);
+        }
+
+        .data-table-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .table-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow-x: auto;
+        }
+
+        .data-table th {
+            background-color: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            color: #666;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .data-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+
+        .data-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .action-btn {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>RS Ar-Rahman</h2>
+            <p>Admin Panel</p>
+        </div>
+
+        <div class="menu-section">
+            <a href="dashboard-admin.html" class="menu-item">
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="entry-dokter.html" class="menu-item">
+                <i class="fas fa-user-md"></i>
+                <span>Manajemen Dokter</span>
+            </a>
+            <a href="entry-poli.html" class="menu-item">
+                <i class="fas fa-clinic-medical"></i>
+                <span>Manajemen Poli</span>
+            </a>
+            <a href="entry-jadwal.html" class="menu-item active">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Penjadwalan</span>
+            </a>
+            <a href="laporan.html" class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Laporan</span>
+            </a>
+            <div class="menu-divider"></div>
+            <a href="display.html" class="menu-item">
+                <i class="fas fa-tv"></i>
+                <span>Display Jadwal</span>
+            </a>
+            <div class="menu-divider"></div>
+            <a href="profil-pengaturan.html" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Pengaturan</span>
+            </a>
+            <a href="login.html" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="top-header">
+            <div class="header-left">
+                <h1>Entry Jadwal Dokter</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="user-name">Admin Fulan</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="form-section">
+                <div class="form-header">
+                    <div class="form-icon">
+                        <i class="fas fa-calendar-plus"></i>
+                    </div>
+                    <h2 class="form-title">Tambah Jadwal Baru</h2>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Nama Dokter</label>
+                    <select class="form-select">
+                        <option>Pilih dokter . . .</option>
+                        <option>dr. Ananda Pradipta</option>
+                        <option>dr. Gunawan Sp.OT, M.Biomed</option>
+                        <option>dr. Musnadil Firdaus Sp.An</option>
+                        <option>dr. Aditya Akbarullah Sp.U</option>
+                        <option>dr. Budi Santoso, Sp.A</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Hari Praktek</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="senin">
+                            <label for="senin">Senin</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="selasa">
+                            <label for="selasa">Selasa</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="rabu">
+                            <label for="rabu">Rabu</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="kamis">
+                            <label for="kamis">Kamis</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="jumat">
+                            <label for="jumat">Jum'at</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="sabtu">
+                            <label for="sabtu">Sabtu</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="minggu">
+                            <label for="minggu">Minggu</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Jam Mulai</label>
+                    <div class="time-inputs">
+                        <input type="time" class="form-input" value="08:00">
+                        <i class="fas fa-clock time-icon"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Jam Selesai</label>
+                    <div class="time-inputs">
+                        <input type="time" class="form-input" value="12:00">
+                        <i class="fas fa-clock time-icon"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Poliklinik</label>
+                    <select class="form-select">
+                        <option>Pilih poliklinik . . .</option>
+                        <option>Poli Umum (R.101)</option>
+                        <option>Poli Spesialis Anak (R.102)</option>
+                        <option>Poli Jantung (R.103)</option>
+                        <option>Poli Orthopaedi (R.281)</option>
+                        <option>Poli Anestesi (R.203)</option>
+                        <option>Poli Urologi (R.221)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Keterangan</label>
+                    <input type="text" class="form-input" placeholder="Masukkan keterangan (opsional)">
+                </div>
+
+                <button class="btn-save">
+                    <i class="fas fa-save"></i>
+                    Simpan Jadwal
+                </button>
+            </div>
+
+            <div class="data-table-card">
+                <div class="table-header">
+                    <h3 class="table-title">
+                        <i class="fas fa-list"></i>
+                        Daftar Jadwal
+                    </h3>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">Aksi</th>
+                            <th>Nama Dokter</th>
+                            <th>Spesialis</th>
+                            <th>Hari</th>
+                            <th>Jam Praktek</th>
+                            <th>Poliklinik</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><button class="action-btn"><i class="fas fa-edit"></i></button></td>
+                            <td>dr. Ananda Pradipta</td>
+                            <td>Dokter Umum</td>
+                            <td>Senin - Jumat</td>
+                            <td>08:00 - 12:00</td>
+                            <td>Poli Umum ( R.101 )</td>
+                        </tr>
+                        <tr>
+                            <td><button class="action-btn"><i class="fas fa-edit"></i></button></td>
+                            <td>dr. Budi Santoso, Sp.A</td>
+                            <td>Spesialis Anak</td>
+                            <td>Senin</td>
+                            <td>09:30 - 13:00</td>
+                            <td>Poli Spesialis Anak atau Poli KIA ( R.102 )</td>
+                        </tr>
+                        <tr>
+                            <td><button class="action-btn"><i class="fas fa-edit"></i></button></td>
+                            <td>dr. Gunawan Sp.OT, M.Biomed</td>
+                            <td>Spesialis Orthopaedi</td>
+                            <td>Selasa</td>
+                            <td>12:00 - 16:00</td>
+                            <td>Poli Orthopaedi ( R.281 )</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

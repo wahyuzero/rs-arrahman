@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Saya - RS Ar-Rahman</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .top-header {
+            background: white;
+            padding: 20px 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-left h1 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .notification-badge-header {
+            background-color: #dc3545;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .notification-bell {
+            position: relative;
+            font-size: 20px;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #00a8cc 0%, #0097b8 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .content-area {
+            padding: 30px;
+        }
+
+        .controls-bar {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .view-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-view {
+            padding: 10px 20px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-view.active {
+            background: linear-gradient(135deg, #00a8cc 0%, #0097b8 100%);
+            color: white;
+            border-color: #00a8cc;
+        }
+
+        .btn-view:hover:not(.active) {
+            border-color: #00a8cc;
+            color: #00a8cc;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-export {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s;
+        }
+
+        .btn-export:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40,167,69,0.3);
+        }
+
+        .calendar-header {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-btn {
+            width: 35px;
+            height: 35px;
+            border: none;
+            background: #f0f0f0;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #00a8cc;
+            color: white;
+        }
+
+        .current-period {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .calendar-container {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: 80px repeat(7, 1fr);
+            gap: 1px;
+            background-color: #e0e0e0;
+            border: 1px solid #e0e0e0;
+        }
+
+        .calendar-header-cell {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .time-cell {
+            background: #f8f9fa;
+            padding: 15px 10px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .calendar-cell {
+            background: white;
+            padding: 10px;
+            min-height: 80px;
+            position: relative;
+        }
+
+        .schedule-event {
+            background: linear-gradient(135deg, #00a8cc 0%, #0097b8 100%);
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 12px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .schedule-event:hover {
+            transform: scale(1.02);
+            box-shadow: 0 3px 10px rgba(0,168,204,0.3);
+        }
+
+        .schedule-event.poli-umum {
+            background: linear-gradient(135deg, #00a8cc 0%, #0097b8 100%);
+        }
+
+        .schedule-event.poli-anak {
+            background: linear-gradient(135deg, #6f42c1 0%, #9b59b6 100%);
+        }
+
+        .schedule-event.poli-jantung {
+            background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
+        }
+
+        .schedule-event.poli-ortho {
+            background: linear-gradient(135deg, #fd7e14 0%, #ffc107 100%);
+        }
+
+        .event-time {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .event-location {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .close-btn {
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .detail-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #00a8cc 0%, #0097b8 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .detail-content {
+            flex: 1;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 3px;
+        }
+
+        .detail-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-change {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-close {
+            flex: 1;
+            padding: 12px;
+            background: #e0e0e0;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-header">
+        <div class="header-left">
+            <h1>Jadwal Saya</h1>
+            <span class="notification-badge-header">1 Perubahan Baru</span>
+        </div>
+        <div class="header-right">
+            <div class="notification-bell">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">1</span>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <span class="user-name">dr. Ananda Pradipta</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-area">
+        <div class="controls-bar">
+            <div class="view-controls">
+                <button class="btn-view active">Mingguan</button>
+                <button class="btn-view">Bulanan</button>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-export">
+                    <i class="fas fa-file-pdf"></i>
+                    Export PDF
+                </button>
+                <button class="btn-export" style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);">
+                    <i class="fas fa-calendar-alt"></i>
+                    Export ICS
+                </button>
+            </div>
+        </div>
+
+        <div class="calendar-header">
+            <div class="calendar-nav">
+                <button class="nav-btn"><i class="fas fa-chevron-left"></i></button>
+                <span class="current-period">2 - 8 Desember 2025</span>
+                <button class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <button class="btn-view">Hari Ini</button>
+        </div>
+
+        <div class="calendar-container">
+            <div class="calendar-grid">
+                <div class="calendar-header-cell">Waktu</div>
+                <div class="calendar-header-cell">Senin<br>2 Des</div>
+                <div class="calendar-header-cell">Selasa<br>3 Des</div>
+                <div class="calendar-header-cell">Rabu<br>4 Des</div>
+                <div class="calendar-header-cell">Kamis<br>5 Des</div>
+                <div class="calendar-header-cell">Jumat<br>6 Des</div>
+                <div class="calendar-header-cell">Sabtu<br>7 Des</div>
+                <div class="calendar-header-cell">Minggu<br>8 Des</div>
+
+                <div class="time-cell">08:00</div>
+                <div class="calendar-cell">
+                    <div class="schedule-event poli-umum" onclick="showDetail()">
+                        <div class="event-time">08:00 - 12:00</div>
+                        <div class="event-location">Poli Umum (R.101)</div>
+                    </div>
+                </div>
+                <div class="calendar-cell">
+                    <div class="schedule-event poli-umum">
+                        <div class="event-time">08:00 - 12:00</div>
+                        <div class="event-location">Poli Umum (R.101)</div>
+                    </div>
+                </div>
+                <div class="calendar-cell">
+                    <div class="schedule-event poli-umum">
+                        <div class="event-time">08:00 - 12:00</div>
+                        <div class="event-location">Poli Umum (R.101)</div>
+                    </div>
+                </div>
+                <div class="calendar-cell">
+                    <div class="schedule-event poli-umum">
+                        <div class="event-time">08:00 - 12:00</div>
+                        <div class="event-location">Poli Umum (R.101)</div>
+                    </div>
+                </div>
+                <div class="calendar-cell">
+                    <div class="schedule-event poli-umum">
+                        <div class="event-time">08:00 - 12:00</div>
+                        <div class="event-location">Poli Umum (R.101)</div>
+                    </div>
+                </div>
+                <div class="calendar-cell"></div>
+                <div class="calendar-cell"></div>
+
+                <div class="time-cell">12:00</div>
+                <div class="calendar-cell"></div>
+                <div class="calendar-cell"></div>
+                <div class="calendar-cell"></div>
+                <div class="calendar-cell"></div>
+                <div class="calendar-cell"></div>
+                <div class="calendar-cell"></div>
+                <div class="calendar-cell"></div>
+
+                <div class="time-cell">16:00</div>
+                <div class="calendar-cell"></div>
+                <div class="calendar-cell"></div>
+                <div class="calendar-cell"></div>
+                <div class="calendar-cell"></div>
+                <div class="calendar-cell"></div>
+                <div class="calendar-cell"></div>
+                <div class="calendar-cell"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Detail Jadwal</h3>
+                <button class="close-btn" onclick="closeDetail()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <div class="detail-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="detail-content">
+                        <div class="detail-label">Hari</div>
+                        <div class="detail-value">Senin, 2 Desember 2025</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="detail-content">
+                        <div class="detail-label">Jam Praktek</div>
+                        <div class="detail-value">08:00 - 12:00</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="detail-content">
+                        <div class="detail-label">Lokasi</div>
+                        <div class="detail-value">Poli Umum (Ruangan R.101)</div>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="detail-content">
+                        <div class="detail-label">Keterangan</div>
+                        <div class="detail-value">Jadwal praktek rutin</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-change">
+                    <i class="fas fa-edit"></i>
+                    Ajukan Perubahan
+                </button>
+                <button class="btn-close" onclick="closeDetail()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showDetail() {
+            document.getElementById('detailModal').classList.add('show');
+        }
+
+        function closeDetail() {
+            document.getElementById('detailModal').classList.remove('show');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailModal');
+            if (event.target === modal) {
+                closeDetail();
+            }
+        }
+    </script>
+</body>
+</html>

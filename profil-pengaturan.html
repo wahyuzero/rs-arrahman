@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil & Pengaturan - RS Ar-Rahman</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: #2c3e50;
+            min-height: 100vh;
+            color: white;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-header {
+            padding: 25px 20px;
+            background: linear-gradient(135deg, #00a8cc 0%, #0097b8 100%);
+            text-align: center;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .menu-section {
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .menu-item:hover {
+            background-color: rgba(0,168,204,0.1);
+            color: white;
+        }
+
+        .menu-item.active {
+            background-color: rgba(0,168,204,0.2);
+            color: white;
+            border-left: 4px solid #00a8cc;
+        }
+
+        .menu-item i {
+            width: 20px;
+            font-size: 16px;
+        }
+
+        .menu-item span {
+            font-size: 14px;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background-color: rgba(255,255,255,0.1);
+            margin: 10px 20px;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+        }
+
+        .top-header {
+            background: white;
+            padding: 20px 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h1 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #00a8cc 0%, #0097b8 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .content-area {
+            padding: 30px;
+        }
+
+        .tabs-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .tabs-header {
+            display: flex;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 18px;
+            background: white;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tab-button:hover {
+            background-color: #f8f9fa;
+            color: #00a8cc;
+        }
+
+        .tab-button.active {
+            color: #00a8cc;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(135deg, #00a8cc 0%, #0097b8 100%);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .profile-photo-section {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .profile-photo {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #00a8cc 0%, #0097b8 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+            border: 4px solid white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .photo-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-upload {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #00a8cc 0%, #0097b8 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-remove {
+            padding: 10px 20px;
+            background: #e0e0e0;
+            color: #666;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-grid-full {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-input {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #00a8cc;
+        }
+
+        .btn-save {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40,167,69,0.3);
+        }
+
+        .password-requirements {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .requirement-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .requirement-item {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .requirement-item i {
+            color: #00a8cc;
+        }
+
+        .table-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .btn-add-user {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #00a8cc 0%, #0097b8 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-input {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            width: 300px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background-color: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            color: #666;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .data-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .data-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .role-badge {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .role-admin {
+            background-color: #e3f7fc;
+            color: #00a8cc;
+        }
+
+        .role-dokter {
+            background-color: #e8e5f7;
+            color: #6f42c1;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-aktif {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-nonaktif {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-edit, .btn-deactivate {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-edit {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        .btn-deactivate {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .close-btn {
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>RS Ar-Rahman</h2>
+            <p>Admin Panel</p>
+        </div>
+
+        <div class="menu-section">
+            <a href="dashboard-admin.html" class="menu-item">
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="entry-dokter.html" class="menu-item">
+                <i class="fas fa-user-md"></i>
+                <span>Manajemen Dokter</span>
+            </a>
+            <a href="entry-poli.html" class="menu-item">
+                <i class="fas fa-clinic-medical"></i>
+                <span>Manajemen Poli</span>
+            </a>
+            <a href="entry-jadwal.html" class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Penjadwalan</span>
+            </a>
+            <a href="laporan.html" class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Laporan</span>
+            </a>
+            <div class="menu-divider"></div>
+            <a href="display.html" class="menu-item">
+                <i class="fas fa-tv"></i>
+                <span>Display Jadwal</span>
+            </a>
+            <div class="menu-divider"></div>
+            <a href="profil-pengaturan.html" class="menu-item active">
+                <i class="fas fa-cog"></i>
+                <span>Pengaturan</span>
+            </a>
+            <a href="login.html" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="top-header">
+            <div class="header-left">
+                <h1>Profil & Pengaturan</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="user-name">Admin Fulan</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="tabs-container">
+                <div class="tabs-header">
+                    <button class="tab-button active" onclick="openTab('profil')">
+                        <i class="fas fa-user"></i> Profil
+                    </button>
+                    <button class="tab-button" onclick="openTab('password')">
+                        <i class="fas fa-lock"></i> Ubah Password
+                    </button>
+                    <button class="tab-button" onclick="openTab('users')">
+                        <i class="fas fa-users"></i> Kelola User
+                    </button>
+                </div>
+
+                <!-- Tab Profil -->
+                <div id="profil" class="tab-content active">
+                    <div class="profile-photo-section">
+                        <div class="profile-photo">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="photo-actions">
+                            <button class="btn-upload">
+                                <i class="fas fa-upload"></i>
+                                Upload Foto
+                            </button>
+                            <button class="btn-remove">Hapus Foto</button>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-input" value="Admin Fulan bin Fulan" placeholder="Masukkan nama lengkap">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" value="admin@rs-arrahman.com" placeholder="Masukkan email">
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">No. HP</label>
+                            <input type="tel" class="form-input" value="081234567890" placeholder="Masukkan no. HP">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Role</label>
+                            <input type="text" class="form-input" value="Administrator" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-full">
+                        <div class="form-group">
+                            <label class="form-label">Alamat</label>
+                            <input type="text" class="form-input" value="Jl. Pahlawan No. 123, Denpasar, Bali" placeholder="Masukkan alamat lengkap">
+                        </div>
+                    </div>
+
+                    <button class="btn-save">
+                        <i class="fas fa-save"></i>
+                        Simpan Perubahan
+                    </button>
+                </div>
+
+                <!-- Tab Password -->
+                <div id="password" class="tab-content">
+                    <div class="password-requirements">
+                        <div class="requirement-title">Persyaratan Password:</div>
+                        <div class="requirement-item">
+                            <i class="fas fa-check-circle"></i>
+                            Minimal 8 karakter
+                        </div>
+                        <div class="requirement-item">
+                            <i class="fas fa-check-circle"></i>
+                            Mengandung huruf besar dan kecil
+                        </div>
+                        <div class="requirement-item">
+                            <i class="fas fa-check-circle"></i>
+                            Mengandung angka
+                        </div>
+                        <div class="requirement-item">
+                            <i class="fas fa-check-circle"></i>
+                            Mengandung karakter khusus (!@#$%^&*)
+                        </div>
+                    </div>
+
+                    <div class="form-grid-full">
+                        <div class="form-group">
+                            <label class="form-label">Password Lama</label>
+                            <input type="password" class="form-input" placeholder="Masukkan password lama">
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Password Baru</label>
+                            <input type="password" class="form-input" placeholder="Masukkan password baru">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Konfirmasi Password Baru</label>
+                            <input type="password" class="form-input" placeholder="Konfirmasi password baru">
+                        </div>
+                    </div>
+
+                    <button class="btn-save">
+                        <i class="fas fa-key"></i>
+                        Ubah Password
+                    </button>
+                </div>
+
+                <!-- Tab Kelola User -->
+                <div id="users" class="tab-content">
+                    <div class="table-actions">
+                        <button class="btn-add-user" onclick="showAddUserModal()">
+                            <i class="fas fa-user-plus"></i>
+                            Tambah User
+                        </button>
+                        <input type="text" class="search-input" placeholder="Cari user...">
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Admin Fulan</td>
+                                <td>admin@rs-arrahman.com</td>
+                                <td><span class="role-badge role-admin">Admin</span></td>
+                                <td><span class="status-badge status-aktif">Aktif</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn-edit">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                        <button class="btn-deactivate">
+                                            <i class="fas fa-ban"></i> Nonaktifkan
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>dr. Ananda Pradipta</td>
+                                <td>ananda@rs-arrahman.com</td>
+                                <td><span class="role-badge role-dokter">Dokter</span></td>
+                                <td><span class="status-badge status-aktif">Aktif</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn-edit">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                        <button class="btn-deactivate">
+                                            <i class="fas fa-ban"></i> Nonaktifkan
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>dr. Gunawan Sp.OT</td>
+                                <td>gunawan@rs-arrahman.com</td>
+                                <td><span class="role-badge role-dokter">Dokter</span></td>
+                                <td><span class="status-badge status-aktif">Aktif</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn-edit">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                        <button class="btn-deactivate">
+                                            <i class="fas fa-ban"></i> Nonaktifkan
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>dr. Budi Santoso</td>
+                                <td>budi@rs-arrahman.com</td>
+                                <td><span class="role-badge role-dokter">Dokter</span></td>
+                                <td><span class="status-badge status-nonaktif">Nonaktif</span></td>
+                                <td>
+                                    <div class="action-btns">
+                                        <button class="btn-edit">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                        <button class="btn-deactivate" style="background-color: #28a745;">
+                                            <i class="fas fa-check"></i> Aktifkan
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tambah User -->
+    <div class="modal" id="addUserModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Tambah User Baru</h3>
+                <button class="close-btn" onclick="closeAddUserModal()">&times;</button>
+            </div>
+            <div class="form-grid-full">
+                <div class="form-group">
+                    <label class="form-label">Nama Lengkap</label>
+                    <input type="text" class="form-input" placeholder="Masukkan nama lengkap">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" placeholder="Masukkan email">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Role</label>
+                    <select class="form-input">
+                        <option>Pilih role...</option>
+                        <option>Admin</option>
+                        <option>Dokter</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" placeholder="Masukkan password">
+                </div>
+            </div>
+            <button class="btn-save" style="width: 100%; justify-content: center;">
+                <i class="fas fa-user-plus"></i>
+                Tambah User
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function openTab(tabName) {
+            const tabContents = document.getElementsByClassName('tab-content');
+            const tabButtons = document.getElementsByClassName('tab-button');
+            
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove('active');
+            }
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function showAddUserModal() {
+            document.getElementById('addUserModal').classList.add('show');
+        }
+
+        function closeAddUserModal() {
+            document.getElementById('addUserModal').classList.remove('show');
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('addUserModal');
+            if (event.target === modal) {
+                closeAddUserModal();
+            }
+        }
+    </script>
+</body>
+</html>
